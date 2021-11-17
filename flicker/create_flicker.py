@@ -94,6 +94,7 @@ class tools:
 
             second = str(x[3])
             second = int(second, 16)
+            second *= 2
             second = tools.Quersumme(second)
 
             erg += first + second
