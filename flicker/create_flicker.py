@@ -29,7 +29,14 @@ class tools:
         # every position in hex in represented by 4 bits
         sizeof_b_hex = ceil(sizeof_b/4) * 4
 
-        return hex((a << sizeof_b_hex) | b)
+        val =  hex((a << sizeof_b_hex) | b)
+        if len(val) == 3:
+            if b == 0:
+                val = val + "0"
+            else:
+                val = val[:2] + "0" + val[2:]
+
+        return val    
 
     def Quersumme(zahl):
        result = 0
@@ -81,19 +88,12 @@ class tools:
         """
 
         for x in data:
-            # Wenn der Wert nur 3 Zeichen lang ist, fehlt die führende Null.
-            if len(x) == 3:
-                first = "0"
-                second = str(x[2])
-            else:
-                first = str(x[2])
-                second = str(x[3])
-
+            first = str(x[2])
             first = int(first, 16)
-            second = int(second, 16)
-
             first = tools.Quersumme(first)
-            second *= 2
+
+            second = str(x[3])
+            second = int(second, 16)
             second = tools.Quersumme(second)
 
             erg += first + second
@@ -104,13 +104,8 @@ class tools:
         xor = 0
 
         for x in data:
-            # Wenn der Wert nur 3 Zeichen lang ist, fehlt die führende Null.
-            if len(x) == 3:
-                first = str(x[2])
-                second = "0"
-            else:
-                first = str(x[3])
-                second = str(x[2])
+            first = str(x[3])
+            second = str(x[2])
 
             xor ^= int(first, 16)
             xor ^= int(second, 16)
@@ -175,12 +170,8 @@ class create():
 
     def create_pictures(self, data: list):
         for x in data:        
-            if len(x) == 3:
-                first = int(str(x[2]), 16)
-                second = 0
-            else:
-                first = int(str(x[3]), 16)
-                second = int(str(x[2]), 16)
+            first = int(str(x[3]), 16)
+            second = int(str(x[2]), 16)
 
             self.save_picture(first)
             self.save_picture(second)
