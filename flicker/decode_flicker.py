@@ -124,7 +124,7 @@ class decode:
         search_bar = True
         for frame in self.gif:
             for x in range(frame.width):
-                index = frame.getpixel((x, 20))
+                index = frame.getpixel((x, frame.height / 2))
                 if frame.getpalette()[index * 3:index * 3 + 3] == search_color and search_bar:
                     bar.append(x)
                     search_color = self.BACKGROOUND
@@ -133,7 +133,6 @@ class decode:
                     bar.append(x - 1)
                     search_color = self.BAR
                     search_bar = True
-
             if len(bar) == 10:
                 # Es wurden 5 Balken gefunden also haben wir den passenden Frame
                 break
