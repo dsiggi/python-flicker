@@ -108,12 +108,11 @@ class decode:
     def read_GIF(self):
         img = Image.open(self.file)
         self.frames = img.n_frames
-        palette = img.getpalette()
+        mode = img.mode
         gif = []
         for frame in range(img.n_frames):
             img.seek(frame)
-            img.putpalette(palette)
-            gif.append(img.copy())
+            gif.append(img.copy().convert(mode))
 
         img.close()
         return gif
