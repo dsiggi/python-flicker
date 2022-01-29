@@ -158,28 +158,49 @@ class decode:
 
         return val
 
-    def search_Start(self):
+    def search_StartFrames(self, start_frame: int):
         FLICKER_START = [[ True, True, True, True, True ],
-                            [ False, True, True, True, True ],
-                            [ True, False, False, False, False ],
-                            [ False, False, False, False, False ],
-                            [ True, True, True, True, True ],
-                            [ False, True, True, True, True ],
-                            [ True, True, True, True, True ],
-                            [ False, True, True, True, True ]]
+                        [ False, True, True, True, True ],
+                        [ True, False, False, False, False ],
+                        [ False, False, False, False, False ],
+                        [ True, True, True, True, True ],
+                        [ False, True, True, True, True ],
+                        [ True, True, True, True, True ],
+                        [ False, True, True, True, True ]]
 
-        found=False
+        index = start_frame     
+        found = False
         pos = 0
-        index = 0
+
         for frame in range(len(self.gif)):
             if self.read_frame(frame) == FLICKER_START[index]:
                 if index >= 7:
                     found = True
                     pos = frame - index
+                    # Wenn die Position negativ ist, Beginnt der Flickercode an Ende des GIFs und setzt sich am Anfang fort.
+                    if pos < 0:
+                        pos = len(self.gif) + pos
                     break
                 index += 1
             else:
                 index = 0
+
+        return found, pos, index
+
+    def search_Start(self):
+        found=False
+        pos = 0
+        index = 0
+
+        # Erster Aufruf
+        # Setzt sich der Startcode nicht über das Ende des GIFs hinfort, findet der erste Aufrauf schon den Anfang.
+        found, pos, index = self.search_StartFrames(0)
+      
+        # Zweiter Aufruf
+        # Wurde mit dem ersten Aufruf der Beginn nicht gefunden, aber Teile davon am Ende,
+        # wird versucht, den Rest noch am Anfang des GIFs zu finden.
+        if not found and index != 0:
+            found, pos, index = self.search_StartFrames(index)
 
         if found:
             return pos
