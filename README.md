@@ -27,7 +27,7 @@ c.create("Python", "Flicker", filename="Flicker Test.gif")
 from flicker import decode_flicker
 
 # Initalisieren des Modules mit den nötigen Einstellungen
-d = decode_flicker(file="Flicker Test.gif", check_luhn=True,
+d = decode_flicker.decode(file="Flicker Test.gif", check_luhn=True,
 check_xor=True)
 
 # Daten auslesen
